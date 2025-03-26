@@ -35,5 +35,6 @@ Route::middleware([
     Route::get('/filas', Filas::class)->name('filas');
     Route::get('/senhas', Senhas::class)->name('senhas');
     Route::get('/chamarsenha', ChamarSenha::class)->name('chamarsenha');
-    Route::get('/painel', PainelSenhas::class)->name('painel');
+   
 });
+Route::get('/painel', PainelSenhas::class)->name('painel');

@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 class PainelSenhas extends Component
 {
     public $senhasChamadas;
-
+    public $ultimachamada;
     protected $listeners = ['senhaChamada' => 'atualizarPainel'];
 
     public function mount()
@@ -20,13 +20,19 @@ class PainelSenhas extends Component
     public function atualizarPainel()
     {
         $this->senhasChamadas = Senha::where('status', 'chamado')
-            ->orderBy('updated_at', 'desc')
+            ->orWhere('status', 'atendido')
+            ->orderBy('inicio_atendimento', 'desc')
             ->take(10)
             ->get();
+        if($this->senhasChamadas[0]->id != $this->ultimachamada){
+             $this->ultimachamada = $this->senhasChamadas[0]->id;
+             $this->dispatch('tocar-som');
+        }
     }
 
     public function render()
     {
-        return view('livewire.painel-senhas');
+        return view('livewire.painel-senhas')
+        ->layout('layouts.painel');
     }
 }
