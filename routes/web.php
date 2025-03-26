@@ -6,7 +6,7 @@ use App\Livewire\Filas;
 use App\Livewire\Senhas;
 use App\Livewire\ChamarSenha;
 use App\Livewire\PainelSenhas;
-
+use App\Livewire\Autoatendimento;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +19,7 @@ use App\Livewire\PainelSenhas;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', Autoatendimento::class)->name('autoatendimento');
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -38,3 +35,4 @@ Route::middleware([
    
 });
 Route::get('/painel', PainelSenhas::class)->name('painel');
+Route::get('/autoatendimento', Autoatendimento::class)->name('autoatendimento');
