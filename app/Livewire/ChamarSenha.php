@@ -14,6 +14,7 @@ class ChamarSenha extends Component
     public $senhaChamada;
     public $senhaAtual;
     public $filasDisponiveis = [];
+    public $proximasSenhas;
     public function mount(){
       $senha=Senha::all();
       //dd($senha);
@@ -28,6 +29,7 @@ class ChamarSenha extends Component
 
         $senha = Senha::where('guiche_id', $this->guiche_id)
         ->where('status', 'chamado')
+        ->whereDate('created_at',Carbon::now())
         ->orderByRaw("prioritaria DESC, created_at ASC")
         ->first();
         $this->senhaAtual = $senha;
@@ -88,7 +90,20 @@ class ChamarSenha extends Component
 
     public function render()
     {
+        
         $this->senhaAtual = Senha::where('guiche_id',$this->guiche_id)->where('status','chamado')->first();
+       if($this->filasDisponiveis!=[]){
+            $filasIds = $this->filasDisponiveis->pluck('id')->toArray(); // Pega apenas os IDs
+            $this->proximasSenhas  = Senha::whereIn('fila_id', $filasIds)
+            ->where('status','pendente')
+            ->whereDate('created_at',Carbon::now())
+            ->orderBy('created_at')
+            ->limit(10)
+            ->get();
+       }else{
+            $this->proximasSenhas =[];
+       }
+      
         return view('livewire.chamar-senha', [
             'guiches' => Guiche::all()
         ]);

@@ -23,7 +23,7 @@
             @foreach ($camposDinamicos as $index => $campo)
                 <div class="mt-2">
                     <label class="text-gray-700">{{ $campo }}</label>
-                    <input type="text" wire:model.defer="inputsDinamicos.{{ $index }}" class="w-full border p-2 rounded text-sm">
+                    <input type="text" wire:model.defer="inputsDinamicos.{{ $campo }}" class="w-full border p-2 rounded text-sm">
                 </div>
             @endforeach
         </div>

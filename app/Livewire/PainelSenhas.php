@@ -24,9 +24,11 @@ class PainelSenhas extends Component
             ->orderBy('inicio_atendimento', 'desc')
             ->take(10)
             ->get();
-        if($this->senhasChamadas[0]->id != $this->ultimachamada){
-             $this->ultimachamada = $this->senhasChamadas[0]->id;
-             $this->dispatch('tocar-som');
+        if ($this->senhasChamadas->isNotEmpty()) {
+            if($this->senhasChamadas[0]->id != $this->ultimachamada){
+                $this->ultimachamada = $this->senhasChamadas[0]->id;
+                $this->dispatch('tocar-som');
+            }
         }
     }
 

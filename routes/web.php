@@ -19,7 +19,7 @@ use App\Livewire\Autoatendimento;
 |
 */
 
-Route::get('/', Autoatendimento::class)->name('autoatendimento');
+Route::get('/', Autoatendimento::class);
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

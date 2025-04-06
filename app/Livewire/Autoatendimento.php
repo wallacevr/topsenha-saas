@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Fila;
 use App\Models\Senha;
-
+use App\Models\User;
 class Autoatendimento extends Component
 {
     public $fila_id = null, $prioritaria = false, $filas = [], $camposDinamicos = [];
@@ -14,6 +14,7 @@ class Autoatendimento extends Component
     
     public function mount()
     {
+        
         $this->filas = Fila::all();
     }
 
@@ -36,28 +37,36 @@ class Autoatendimento extends Component
 
     public function generate()
     {
-        $this->validate([
-            'fila_id' => 'required|exists:filas,id',
-        ]);
-
-        $fila = Fila::findOrFail($this->fila_id);
-        $numero = Senha::where('fila_id', $fila->id)
-            ->whereDate('created_at', now())
-            ->count() + 1;
-        $codigo = "{$fila->prefixo}-" . str_pad($numero, 3, '0', STR_PAD_LEFT);
-
-        $senha = Senha::create([
-            'fila_id' => $fila->id,
-            'senha' => $codigo,
-            'prioritaria' => $this->prioritaria,
-            'status' => 'pendente',
-            'campos' => json_encode($this->inputsDinamicos),
-        ]);
-
-        $this->ultimaSenha = $senha;
-        $this->reset(['fila_id', 'prioritaria', 'inputsDinamicos']);
+        try {
+            $this->validate([
+                'fila_id' => 'required|exists:filas,id',
+                
+            ]);
+    
+            $fila = Fila::findOrFail($this->fila_id);
+            $numero = Senha::where('fila_id', $fila->id)
+                ->whereDate('created_at', now())
+                ->count() + 1;
+            $codigo = "{$fila->prefixo}-" . str_pad($numero, 3, '0', STR_PAD_LEFT);
+            $this->inputsDinamicos = collect($this->inputsDinamicos)->map(function ($valor) {
+                return is_null($valor) || trim($valor) === '' ? '-' : $valor;
+            })->toArray();
+            $senha = Senha::create([
+                'fila_id' => $fila->id,
+                'senha' => $codigo,
+                'prioritaria' => $this->prioritaria,
+                'status' => 'pendente',
+              'campos' => $this->inputsDinamicos
+    
+            ]);
+    
+            $this->ultimaSenha = $senha;
+            $this->reset(['fila_id', 'prioritaria', 'inputsDinamicos']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+        }
     }
-
     public function render()
     {
         return view('livewire.autoatendimento')

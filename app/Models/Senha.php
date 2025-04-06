@@ -13,6 +13,7 @@ class Senha extends Model
     protected $casts = [
         'inicio_atendimento' => 'datetime',
         'fim_atendimento' => 'datetime',
+        'campos' => 'array'
     ];
 
     public function fila()
