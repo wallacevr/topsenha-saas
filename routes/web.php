@@ -1,12 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Guiches;
-use App\Livewire\Filas;
-use App\Livewire\Senhas;
-use App\Livewire\ChamarSenha;
-use App\Livewire\PainelSenhas;
-use App\Livewire\Autoatendimento;
+use App\Http\Controllers\LandingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,20 +14,7 @@ use App\Livewire\Autoatendimento;
 |
 */
 
-Route::get('/', Autoatendimento::class);
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    Route::get('/guiches', Guiches::class)->name('guiches');
-    Route::get('/filas', Filas::class)->name('filas');
-    Route::get('/senhas', Senhas::class)->name('senhas');
-    Route::get('/chamarsenha', ChamarSenha::class)->name('chamarsenha');
-   
-});
-Route::get('/painel', PainelSenhas::class)->name('painel');
-Route::get('/autoatendimento', Autoatendimento::class)->name('autoatendimento');
+Route::get('/', [LandingController::class, 'index'])->name('home');
+Route::get('/cadastro', [LandingController::class, 'cadastro'])->name('cadastro');
+Route::get('/quem-somos', [LandingController::class, 'quemSomos'])->name('quem-somos');
+Route::get('/duvidas-frequentes', [LandingController::class, 'faq'])->name('faq');

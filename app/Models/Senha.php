@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Stancl\Tenancy\Database\Concerns\UsesTenantConnection;
 class Senha extends Model
 {
     use HasFactory;
+    use UsesTenantConnection;
     protected $fillable = ['fila_id', 'senha', 'prioritaria', 'status', 'inicio_atendimento', 'fim_atendimento','campos','guiche_id'];
 
     protected $casts = [
